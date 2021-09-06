@@ -1,0 +1,11 @@
+<svg id="Component_2_1" data-name="Component 2 – 1" xmlns="http://www.w3.org/2000/svg" width="362" height="749" viewBox="0 0 362 749">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f5e6ce;
+      }
+    </style>
+  </defs>
+  <circle id="Ellipse_2" data-name="Ellipse 2" class="cls-1" cx="181" cy="181" r="181" transform="translate(0 387)"/>
+  <rect id="Rectangle_1" data-name="Rectangle 1" class="cls-1" width="362" height="568"/>
+</svg>
