@@ -19,6 +19,10 @@ module.exports = {
         center: true,
         padding: "1rem",
       },
+      inset: {
+        104: "38rem",
+        "-104": "-38rem",
+      },
     },
   },
   variants: {

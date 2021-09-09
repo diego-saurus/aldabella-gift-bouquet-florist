@@ -8,7 +8,7 @@ function Main() {
           style={{ fontFamily: `"Abril Fatface", cursive` }}
           className="text-blue text-6xl text-center tracking-wide md:text-left md:text-8xl md:leading-snug"
         >
-          Create Elegant Gift For Your <span>Beloved</span> one
+          Create Elegant Gift For Your Beloved one
         </p>
         <p
           style={{ fontFamily: "Merriweather" }}

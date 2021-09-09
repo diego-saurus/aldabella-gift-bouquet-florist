@@ -2,25 +2,24 @@ import Head from "next/head"
 
 import Navbar from "../components/Navbar"
 import Main from "../components/Main"
+import Layout from "../components/Layout"
 
 export default function Home() {
   return (
-    <Wrap>
-      <Navbar />
-      <Head>
-        <title>AldaBella . Gift . Bouquet . Florist</title>
-      </Head>
-      <div className="container">
-        <Main />
-      </div>
-    </Wrap>
+    <>
+      <Wrap>
+        <Layout>
+          <Main />
+        </Layout>
+      </Wrap>
+    </>
   )
 }
 
-function Wrap({ children }) {
+export function Wrap({ children }) {
   return (
     <div
-      className="bg-local bg-cover bg-top"
+      className={`bg-local bg-cover bg-top`}
       style={{ backgroundImage: `url('img/Background.png')`, height: "100vh" }}
     >
       {children}
