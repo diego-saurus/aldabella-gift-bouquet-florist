@@ -1,17 +1,14 @@
-import Head from "next/head"
-
-import Navbar from "../components/Navbar"
-import Main from "../components/Main"
 import Layout from "../components/Layout"
+import Dashboard from "../components/Dashboard"
+import SectionBar from "../components/SectionBar"
 
 export default function Home() {
   return (
     <>
-      <Wrap>
-        <Layout>
-          <Main />
-        </Layout>
-      </Wrap>
+      <Layout title="Dashboard">
+        <Dashboard />
+      </Layout>
+      <SectionBar />
     </>
   )
 }

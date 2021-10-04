@@ -20,20 +20,6 @@ module.exports = {
       gray: {
         DEFAULT: "#3B4043",
       },
-      pink: {
-        DEFAULT: "#f7ede1",
-      },
-      brown: {
-        DEFAULT: "#4f4637",
-      },
-      blue: {
-        DEFAULT: "#2e4959",
-      },
-    },
-    extend: {
-      container: {
-        center: true,
-      },
     },
   },
   variants: {
