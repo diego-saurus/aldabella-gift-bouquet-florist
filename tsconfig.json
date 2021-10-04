@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@component/*":["components/*"],
+      "@svg/*":["public/svg/*"]
+    },
     "target": "es5",
     "lib": [
       "dom",
@@ -25,5 +30,8 @@
   ],
   "exclude": [
     "node_modules"
+  ],
+  "files": [
+    "types/declaration.d.ts"
   ]
 }
