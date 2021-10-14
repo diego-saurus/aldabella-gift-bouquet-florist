@@ -1,4 +1,5 @@
 import { Collection } from "mongodb"
+import { NextApiResponse } from "next"
 
 declare module "*.svg" {
   import React from "react"
