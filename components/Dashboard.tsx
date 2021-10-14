@@ -1,12 +1,13 @@
 import React, { CSSProperties } from "react"
-import Vector from "@svg/Vector 1.svg"
+import Vector from "svg/Vector 1.svg"
 import SearchBox from "components/utils/SearchBox"
+import GradientButton from "./utils/GradientBtn"
 
 const SVGStyle: CSSProperties = { zIndex: -10 }
 
 const Dashboard: React.FC = () => {
   return (
-    <section className="w-full text-white flex relative md:py-16 md:px-24 md:h-screen ">
+    <section className="w-full text-white flex relative md:py-12 md:px-24 md:h-screen ">
       <Vector
         className="absolute hidden md:block right-0 -bottom-7"
         style={SVGStyle}
@@ -27,32 +28,16 @@ const Dashboard: React.FC = () => {
           Nulla pulvinar
         </p>
         <div className="flex my-3">
-          <DashboardBtn className="bg-gradient-to-r from-gold-light to-gold text-black">
+          <GradientButton className="bg-gradient-to-r from-gold-light to-gold text-black mr-3">
             Create Now
-          </DashboardBtn>
-          <DashboardBtn className="bg-gradient-to-br from-black-light to-black text-gold-medium">
+          </GradientButton>
+          <GradientButton className="bg-gradient-to-br from-black-light to-black text-gold-medium">
             Contact Us
-          </DashboardBtn>
+          </GradientButton>
         </div>
       </div>
       <div className="hidden md:block"></div>
     </section>
-  )
-}
-
-interface DashboardBtnProps {
-  className: string
-}
-
-const DashboardBtn: React.FC<DashboardBtnProps> = ({ children, className }) => {
-  return (
-    <button
-      className={`py-3 px-10 md:px-14 mr-6 rounded-lg font-bold transition-all ease-in-out text-sm md:text-base active:scale-105  ${
-        className && className
-      }`}
-    >
-      {children}
-    </button>
   )
 }
 

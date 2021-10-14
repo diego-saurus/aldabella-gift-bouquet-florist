@@ -39,6 +39,10 @@ code {
     monospace;
 }
 
+.centering {
+  @apply mx-3 md:mx-24;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;

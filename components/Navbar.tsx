@@ -1,10 +1,10 @@
 import React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import MenuIcon from "@svg/menu_black_24dp.svg"
-import MenuOpenIcon from "@svg/menu_open_black_24dp.svg"
-import CartIcon from "@svg/shopping_cart_black_24dp.svg"
-import SearchBox from "./utils/SearchBox"
+import MenuIcon from "svg/menu_black_24dp.svg"
+import MenuOpenIcon from "svg/menu_open_black_24dp.svg"
+import CartIcon from "svg/shopping_cart_black_24dp.svg"
+import SearchBox from "components/utils/SearchBox"
 
 interface NavProps {
   isOpen: boolean
@@ -17,7 +17,7 @@ interface NavlinkProps {
   className?: string
 }
 
-const NavItemsText = ["About", "Testimonial", "Gallery", "Home", "Project"]
+const NavItemsText = ["Home", "About", "Testimonial", "Gallery"]
 
 const Navbar: React.FC<NavProps> = ({ toggleIsOpen, isOpen }) => {
   const { pathname } = useRouter()

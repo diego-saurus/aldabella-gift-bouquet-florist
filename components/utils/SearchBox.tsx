@@ -1,5 +1,5 @@
-import React, { ClassAttributes } from "react"
-import SearchIcon from "@svg/search_black_24dp.svg"
+import React from "react"
+import SearchIcon from "svg/search_black_24dp.svg"
 
 interface Props {
   className?: string

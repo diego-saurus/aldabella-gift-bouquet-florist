@@ -7,13 +7,17 @@ module.exports = {
 
     return config
   },
-  async redirects() {
-    return [
-      {
-        source: "/home",
-        destination: "/",
-        permanent: false,
-      },
-    ]
+  env: {
+    MONGODB_URI: "mongodb://localhost",
+    MONGODB_DB: "alda-florist",
   },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/home",
+  //       destination: "/",
+  //       permanent: false,
+  //     },
+  //   ]
+  // },
 }

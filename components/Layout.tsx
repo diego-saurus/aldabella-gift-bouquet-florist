@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Navbar from "./Navbar"
 import Head from "next/head"
+import useScreenSize from "hooks/useScreenSize"
 
 interface Props {
   title: string
@@ -8,25 +9,17 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children, title }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [ScreenW] = useScreenSize()
 
   const toggleIsOpen = () => {
-    if (window.innerWidth < 768) {
-      setIsOpen((e) => !e)
-    }
+    setIsOpen((e) => !e)
   }
 
   useEffect(() => {
-    const windowListener = (): void => {
-      if (window.innerWidth > 768) {
-        setIsOpen(false)
-      }
+    if (ScreenW > 768) {
+      setIsOpen(false)
     }
-
-    window.addEventListener("resize", windowListener)
-    return () => {
-      window.removeEventListener("resize", windowListener)
-    }
-  }, [])
+  }, [ScreenW])
 
   useEffect(() => {
     const body = document.querySelector("body")
