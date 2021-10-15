@@ -1,8 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
+import { Filter, FindOptions, Sort } from "mongodb"
 import Cors from "cors"
 
-import useItemsCollection from "hooks/useItemsCollection"
+import { useItemsCollection } from "hooks/useItemsCollection"
 import { runMiddleware } from "lib/initMiddlewares"
 import { generateSlug } from "lib/generateSlug"
 import { ItemsCollection } from "types/declaration"
@@ -16,23 +17,44 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //     methods: ["GET", "POST"],
   //   })
   // )
+  const pageLimit = 5
 
-  const { method, body } = req
+  const { method, body, query } = req
+  const { search, sort, page, limit } = query
+
   const Items = await useItemsCollection()
 
   async function checkSlug(generator: () => string): Promise<string> {
     const slug = generator()
-    if (Boolean(await Items.findOne({ slug }))) {
-      return checkSlug(generator)
+    const item = await Items.findOne({ slug })
+    if (!item) {
+      return slug
     }
-    return slug
+    return checkSlug(generator)
   }
 
   try {
     switch (method) {
       case "GET":
-        const data = await Items.find().toArray()
-        res.status(200).json(data)
+        const regex: Filter<ItemsCollection> = {
+          name: {
+            $regex: `${search}`,
+            $options: "i",
+          },
+        }
+
+        const findOpt: FindOptions<ItemsCollection> = {
+          skip: Number(page) ? pageLimit * Number(page) - pageLimit : 0,
+          limit: Number(limit) || pageLimit,
+        }
+
+        const sortOpt: Sort = { _id: sort === "asc" ? "asc" : "desc" }
+
+        const items = await Items.find(search ? regex : null, findOpt)
+          .sort(sortOpt)
+          .toArray()
+
+        res.status(200).json(items)
         break
 
       case "POST":
