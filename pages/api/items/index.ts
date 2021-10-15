@@ -1,22 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { Filter, FindOptions, Sort } from "mongodb"
-import Cors from "cors"
 
 import { useItemsCollection } from "hooks/useItemsCollection"
-import { runMiddleware } from "lib/initMiddlewares"
 import { generateSlug } from "lib/generateSlug"
 import { ItemsCollection } from "types/declaration"
 import { handleError } from "lib/handleError"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  await runMiddleware(
-    req,
-    res,
-    Cors({
-      origin: process.env.WEBSITE_URL,
-    })
-  )
   const pageLimit = 5
 
   const { method, body, query } = req

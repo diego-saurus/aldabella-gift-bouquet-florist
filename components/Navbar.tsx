@@ -1,10 +1,11 @@
 import React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { signin, signIn, signOut, useSession } from "next-auth/client"
+
 import MenuIcon from "svg/menu_black_24dp.svg"
 import MenuOpenIcon from "svg/menu_open_black_24dp.svg"
 import CartIcon from "svg/shopping_cart_black_24dp.svg"
-import SearchBox from "components/utils/SearchBox"
 
 interface NavProps {
   isOpen: boolean
@@ -63,13 +64,17 @@ const NavLogo: React.FC<NavProps> = ({ isOpen, toggleIsOpen }) => {
 }
 
 const NavItem: React.FC<NavProps> = ({ isOpen, path }) => {
+  const [session, loading] = useSession()
+  const handleSign = () => {
+    session ? signOut() : signin()
+  }
+
   return (
     <div
       className={`h-full ${
         isOpen ? "flex" : "hidden"
       } overflow-hidden flex-col mx-3 mt-10 transition-all justify-between text-md font-medium md:m-0 md:border-opacity-0 md:flex md:items-center md:h-auto md:flex-row  md:w-1/2`}
     >
-      <SearchBox className="md:hidden" />
       {NavItemsText.map((e, i) => (
         <Navlink
           key={i}
@@ -87,8 +92,11 @@ const NavItem: React.FC<NavProps> = ({ isOpen, path }) => {
         </div>
       </div>
       <div className="p-0.5 bg-gradient-to-r from-gold-light to-gold rounded-lg hidden md:block">
-        <button className="text-gold-light px-5 py-2 rounded-md bg-black transition-all duration-500 ease-in-out hover:text-black hover:bg-gradient-to-r hover:from-gold-light to-gold ">
-          Product
+        <button
+          className="text-gold-light px-5 py-2 rounded-md bg-black transition-all duration-500 ease-in-out hover:text-black hover:bg-gradient-to-r hover:from-gold-light to-gold"
+          onClick={handleSign}
+        >
+          {session ? "Sign Out" : "Sign In"}
         </button>
       </div>
     </div>

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const Layout: React.FC<Props> = ({ children, title }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState<Boolean>(false)
   const [ScreenW] = useScreenSize()
 
   const toggleIsOpen = () => {
