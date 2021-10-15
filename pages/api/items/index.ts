@@ -10,13 +10,13 @@ import { ItemsCollection } from "types/declaration"
 import { handleError } from "lib/handleError"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // await runMiddleware(
-  //   req,
-  //   res,
-  //   Cors({
-  //     methods: ["GET", "POST"],
-  //   })
-  // )
+  await runMiddleware(
+    req,
+    res,
+    Cors({
+      origin: process.env.WEBSITE_URL,
+    })
+  )
   const pageLimit = 5
 
   const { method, body, query } = req
