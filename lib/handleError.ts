@@ -7,10 +7,12 @@ interface Error {
 
 export function handleError(res: NextApiResponse, error: Error) {
   let status: number
+  if (!error.code) return
 
   switch (error.code) {
     case 121:
       status = 406
+      error.message = "Document Validation Error"
       break
 
     case 405:
