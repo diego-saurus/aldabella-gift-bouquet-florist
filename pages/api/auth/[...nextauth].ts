@@ -17,6 +17,7 @@ export default NextAuth({
     }),
 
     CredentialProvider({
+      name: "Credential",
       credentials: {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: { label: "Password", type: "password" },

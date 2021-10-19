@@ -2,32 +2,34 @@ import React, { useEffect, useState } from "react"
 import Navbar from "./Navbar"
 import Head from "next/head"
 import useScreenSize from "hooks/useScreenSize"
-import { SessionProvider } from "next-auth/react"
-import { Session } from "next-auth/server/types"
 
 interface Props {
   title: string
-  session: Session
 }
 
-const Layout: React.FC<Props> = ({ children, title, session }) => {
-  const [navbarIsOpen, setNavbarIsOpen] = useState(false)
+export const NavbarContext = React.createContext({
+  navbarOpen: false,
+  toggleNavbar: () => {},
+})
+
+const Layout: React.FC<Props> = ({ children, title }) => {
+  const [navbarOpen, setNavbarOpen] = useState(false)
   const [ScreenW] = useScreenSize()
 
-  const toggleIsOpen = () => {
-    setNavbarIsOpen((e) => !e)
+  const toggleNavbar = () => {
+    setNavbarOpen((e) => !e)
   }
 
   useEffect(() => {
     if (ScreenW > 768) {
-      setNavbarIsOpen(false)
+      setNavbarOpen(false)
     }
   }, [ScreenW])
 
   useEffect(() => {
     const body = document.querySelector("body")
-    body.style.setProperty("--bg-color", navbarIsOpen ? "#F8B12E" : "#090909")
-  }, [navbarIsOpen])
+    body.style.setProperty("--bg-color", navbarOpen ? "#F8B12E" : "#090909")
+  }, [navbarOpen])
 
   return (
     <>
@@ -35,15 +37,11 @@ const Layout: React.FC<Props> = ({ children, title, session }) => {
         <title>{title} | AldaBella . Gift . Bouquet . Florist</title>
       </Head>
 
-      <div className={`${navbarIsOpen ? "h-screen" : "h-auto"}`}>
-        <SessionProvider session={session}>
-          <Navbar
-            navbarIsOpen={navbarIsOpen}
-            toogleNavbarIsOpen={toggleIsOpen}
-          />
-          <div id="modal"></div>
-          {!navbarIsOpen && children}
-        </SessionProvider>
+      <div className={`${navbarOpen ? "h-screen" : "h-auto"}`}>
+        <NavbarContext.Provider value={{ navbarOpen, toggleNavbar }}>
+          <Navbar />
+        </NavbarContext.Provider>
+        {!navbarOpen && children}
       </div>
     </>
   )

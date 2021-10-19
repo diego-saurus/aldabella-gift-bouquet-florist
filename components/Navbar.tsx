@@ -1,54 +1,40 @@
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
-import { createPortal } from "react-dom"
 import { useRouter } from "next/router"
 import { signIn, signOut, useSession, getCsrfToken } from "next-auth/react"
+
+import { useNavbarContext } from "hooks/useNavbarContext"
 
 import MenuIcon from "svg/menu_black_24dp.svg"
 import MenuOpenIcon from "svg/menu_open_black_24dp.svg"
 import CartIcon from "svg/shopping_cart_black_24dp.svg"
 
-interface NavProps {
-  navbarIsOpen: boolean
-  toogleNavbarIsOpen?: () => void
-  path?: string
-}
-
-interface NavlinkProps {
-  children: string
-  className?: string
-}
-
 const NavItemsText = ["Home", "About", "Testimonial", "Gallery"]
 
-const Navbar: React.FC<NavProps> = ({
-  toogleNavbarIsOpen: toggleIsOpen,
-  navbarIsOpen: isOpen,
-}) => {
-  const { pathname } = useRouter()
+const Navbar: React.FC = () => {
+  const { navbarOpen } = useNavbarContext()
 
   return (
     <nav
       className={`${
-        isOpen ? "h-screen" : "h-auto"
+        navbarOpen ? "h-screen" : "h-auto"
       } md:h-auto flex flex-col md:px-24 md:flex-row md:justify-between md:items-center text-white md:py-4`}
       style={{ fontFamily: "Heebo" }}
     >
-      <NavLogo navbarIsOpen={isOpen} toogleNavbarIsOpen={toggleIsOpen} />
-      <NavItem navbarIsOpen={isOpen} path={pathname} />
+      <NavLogo />
+      <NavItem />
     </nav>
   )
 }
 
-const NavLogo: React.FC<NavProps> = ({
-  navbarIsOpen: isOpen,
-  toogleNavbarIsOpen: toggleIsOpen,
-}) => {
-  const IconClass = `fill-current ${isOpen ? "text-black" : "text-gold"}`
+const NavLogo: React.FC = () => {
+  const { navbarOpen, toggleNavbar } = useNavbarContext()
+
+  const IconClass = `fill-current ${navbarOpen ? "text-black" : "text-gold"}`
   return (
     <div
       className={`flex p-3 w-full justify-between items-center md:p-0 md:border-b-0 border-b-2 ${
-        isOpen ? "border-black" : "border-gold"
+        navbarOpen ? "border-black" : "border-gold"
       }`}
     >
       <h1 className="hidden md:block font-bold tracking-widest text-lg md:text-2xl">
@@ -56,8 +42,8 @@ const NavLogo: React.FC<NavProps> = ({
           <a>AldaBella</a>
         </Link>
       </h1>
-      <button onClick={() => toggleIsOpen()} className="md:hidden">
-        {isOpen ? (
+      <button onClick={() => toggleNavbar()} className="md:hidden">
+        {navbarOpen ? (
           <MenuOpenIcon className={IconClass} />
         ) : (
           <MenuIcon className={IconClass} />
@@ -70,15 +56,19 @@ const NavLogo: React.FC<NavProps> = ({
   )
 }
 
-const NavItem: React.FC<NavProps> = ({ navbarIsOpen: isOpen, path }) => {
+const NavItem: React.FC = () => {
   const { data: session, status: authStatus } = useSession()
   const [status, setStatus] = useState("")
+  const { pathname: path } = useRouter()
+  const { navbarOpen } = useNavbarContext()
 
   useEffect(() => {
     setStatus(handleStatus())
   }, [authStatus])
 
-  async function handleSign() {}
+  async function handleSign() {
+    authStatus === "authenticated" ? signOut() : signIn()
+  }
 
   function handleStatus() {
     switch (authStatus) {
@@ -94,18 +84,17 @@ const NavItem: React.FC<NavProps> = ({ navbarIsOpen: isOpen, path }) => {
   return (
     <div
       className={`h-full ${
-        isOpen ? "flex" : "hidden"
+        navbarOpen ? "flex" : "hidden"
       } overflow-hidden flex-col mx-3 mt-10 transition-all justify-between text-md font-medium md:m-0 md:border-opacity-0 md:flex md:items-center md:h-auto md:flex-row  md:w-1/2`}
     >
       {NavItemsText.map((e, i) => (
         <Navlink
+          title={e}
           key={i}
           className={`${
             path === "/" + e.toLowerCase() ? "font-bold" : "font-light"
           }`}
-        >
-          {e}
-        </Navlink>
+        />
       ))}
       <div className="flex w-full justify-around md:hidden text-black">
         <div className="border-black border-2 p-5 w-full text-center">Mail</div>
@@ -125,13 +114,18 @@ const NavItem: React.FC<NavProps> = ({ navbarIsOpen: isOpen, path }) => {
   )
 }
 
-const Navlink: React.FC<NavlinkProps> = ({ children, className }) => {
+interface NavlinkProps {
+  className?: string
+  title: string
+}
+
+const Navlink: React.FC<NavlinkProps> = ({ children, className, title }) => {
   return (
-    <Link href={`/${children.toLowerCase()}`}>
+    <Link href={`/${title.toLowerCase()}`}>
       <a
         className={`text-3xl text-black cursor-pointer p-2 md:text-base md:font-bold md:text-white md:border-opacity-0 md:hover:border-opacity-100 ${className}`}
       >
-        {children}
+        {title}
       </a>
     </Link>
   )
