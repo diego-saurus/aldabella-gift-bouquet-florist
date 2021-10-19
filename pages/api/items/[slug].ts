@@ -1,13 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { useItemsCollection } from "hooks/useItemsCollection"
-import { handleError } from "lib/handleError"
+import { handleError } from "utils/handleError"
+import { checkSession } from "utils/checkSession"
+import { handleBodyProp } from "utils/handleBodyProp"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, query, body } = req
   const { slug } = query
-  const Items = await useItemsCollection()
 
   try {
+    await checkSession(req)
+
+    const Items = await useItemsCollection()
+
     const item = await Items.findOne({ slug })
     if (!item) throw { code: 404 }
 
@@ -32,7 +37,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           }
         }
         await Items.findOneAndUpdate({ slug }, { $set: allowed })
-        res.status(200).json({ acknoweledge: true, updated: allowed })
+        res.status(200).json({ updated: allowed })
         break
 
       default:

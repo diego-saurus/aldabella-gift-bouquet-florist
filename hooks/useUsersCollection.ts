@@ -1,8 +1,8 @@
 import { connectToDatabase } from "lib/mongodb"
 import { Collections } from "types/declaration"
 
-export const useItemsCollection = async () => {
+export async function useUsersCollection() {
   const { db } = await connectToDatabase()
-  const itemsCollection = db.collection<Collections.Item>("items")
-  return itemsCollection
+  const usersColletion = db.collection<Collections.User>("users")
+  return usersColletion
 }

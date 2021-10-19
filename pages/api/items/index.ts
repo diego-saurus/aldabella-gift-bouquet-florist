@@ -3,38 +3,41 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { Filter, FindOptions, Sort } from "mongodb"
 
 import { useItemsCollection } from "hooks/useItemsCollection"
-import { generateSlug } from "lib/generateSlug"
-import { ItemsCollection } from "types/declaration"
-import { handleError } from "lib/handleError"
+import { generateSlug } from "utils/generateSlug"
+import { Collections } from "types/declaration"
+import { handleError } from "utils/handleError"
+import { checkSession } from "utils/checkSession"
+import { handleBodyProp } from "utils/handleBodyProp"
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const pageLimit = 5
-
   const { method, body, query } = req
   const { search, sort, page, limit } = query
 
-  const Items = await useItemsCollection()
-
-  async function checkSlug(generator: () => string): Promise<string> {
-    const slug = generator()
-    const item = await Items.findOne({ slug })
-    if (!item) {
-      return slug
-    }
-    return checkSlug(generator)
-  }
-
   try {
+    await checkSession(req)
+
+    const Items = await useItemsCollection()
+
+    const checkSlug = async (generator: () => string): Promise<string> => {
+      const slug = generator()
+      const item = await Items.findOne({ slug })
+      if (!item) {
+        return slug
+      }
+      return checkSlug(generator)
+    }
+
     switch (method) {
       case "GET":
-        const regex: Filter<ItemsCollection> = {
+        const regex: Filter<Collections.Item> = {
           name: {
             $regex: `${search}`,
             $options: "i",
           },
         }
 
-        const findOpt: FindOptions<ItemsCollection> = {
+        const findOpt: FindOptions<Collections.Item> = {
           skip: Number(page) ? pageLimit * Number(page) - pageLimit : 0,
           limit: Number(limit) || pageLimit,
         }
@@ -49,7 +52,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         break
 
       case "POST":
-        const { name, price }: ItemsCollection = body
+        handleBodyProp(["name", "price"], req)
+
+        const { name, price }: Collections.Item = body
         const slug = await checkSlug(generateSlug)
         const result = await Items.insertOne({
           name,

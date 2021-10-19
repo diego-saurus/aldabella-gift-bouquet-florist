@@ -1,15 +1,16 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
+import { createPortal } from "react-dom"
 import { useRouter } from "next/router"
-import { signin, signIn, signOut, useSession } from "next-auth/client"
+import { signIn, signOut, useSession, getCsrfToken } from "next-auth/react"
 
 import MenuIcon from "svg/menu_black_24dp.svg"
 import MenuOpenIcon from "svg/menu_open_black_24dp.svg"
 import CartIcon from "svg/shopping_cart_black_24dp.svg"
 
 interface NavProps {
-  isOpen: boolean
-  toggleIsOpen?: () => void
+  navbarIsOpen: boolean
+  toogleNavbarIsOpen?: () => void
   path?: string
 }
 
@@ -20,7 +21,10 @@ interface NavlinkProps {
 
 const NavItemsText = ["Home", "About", "Testimonial", "Gallery"]
 
-const Navbar: React.FC<NavProps> = ({ toggleIsOpen, isOpen }) => {
+const Navbar: React.FC<NavProps> = ({
+  toogleNavbarIsOpen: toggleIsOpen,
+  navbarIsOpen: isOpen,
+}) => {
   const { pathname } = useRouter()
 
   return (
@@ -30,13 +34,16 @@ const Navbar: React.FC<NavProps> = ({ toggleIsOpen, isOpen }) => {
       } md:h-auto flex flex-col md:px-24 md:flex-row md:justify-between md:items-center text-white md:py-4`}
       style={{ fontFamily: "Heebo" }}
     >
-      <NavLogo isOpen={isOpen} toggleIsOpen={toggleIsOpen} />
-      <NavItem isOpen={isOpen} path={pathname} />
+      <NavLogo navbarIsOpen={isOpen} toogleNavbarIsOpen={toggleIsOpen} />
+      <NavItem navbarIsOpen={isOpen} path={pathname} />
     </nav>
   )
 }
 
-const NavLogo: React.FC<NavProps> = ({ isOpen, toggleIsOpen }) => {
+const NavLogo: React.FC<NavProps> = ({
+  navbarIsOpen: isOpen,
+  toogleNavbarIsOpen: toggleIsOpen,
+}) => {
   const IconClass = `fill-current ${isOpen ? "text-black" : "text-gold"}`
   return (
     <div
@@ -63,10 +70,25 @@ const NavLogo: React.FC<NavProps> = ({ isOpen, toggleIsOpen }) => {
   )
 }
 
-const NavItem: React.FC<NavProps> = ({ isOpen, path }) => {
-  const [session, loading] = useSession()
-  const handleSign = () => {
-    session ? signOut() : signin()
+const NavItem: React.FC<NavProps> = ({ navbarIsOpen: isOpen, path }) => {
+  const { data: session, status: authStatus } = useSession()
+  const [status, setStatus] = useState("")
+
+  useEffect(() => {
+    setStatus(handleStatus())
+  }, [authStatus])
+
+  async function handleSign() {}
+
+  function handleStatus() {
+    switch (authStatus) {
+      case "loading":
+        return "....."
+      case "unauthenticated":
+        return "Sign In"
+      case "authenticated":
+        return "Sign Out"
+    }
   }
 
   return (
@@ -96,7 +118,7 @@ const NavItem: React.FC<NavProps> = ({ isOpen, path }) => {
           className="text-gold-light px-5 py-2 rounded-md bg-black transition-all duration-500 ease-in-out hover:text-black hover:bg-gradient-to-r hover:from-gold-light to-gold"
           onClick={handleSign}
         >
-          {session ? "Sign Out" : "Sign In"}
+          {status}
         </button>
       </div>
     </div>

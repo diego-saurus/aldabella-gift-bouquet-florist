@@ -1,5 +1,4 @@
 import { ObjectID } from "bson"
-import { Collection } from "mongodb"
 import { NextApiResponse } from "next"
 
 declare module "*.svg" {
@@ -8,9 +7,16 @@ declare module "*.svg" {
   export default SVG
 }
 
-declare interface ItemsCollection {
-  _id: ObjectID
-  name: string
-  price: number
-  slug?: string
+declare module Collections {
+  export interface Item {
+    _id: ObjectID
+    name: string
+    price: number
+    slug?: string
+  }
+
+  export interface User {
+    username: string
+    password: string
+  }
 }
