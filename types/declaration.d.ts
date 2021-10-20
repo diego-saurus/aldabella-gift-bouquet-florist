@@ -20,7 +20,7 @@ declare module Collections {
   export interface User {
     username: string
     password: string
-    cart: UserCart
     role: UserRole
+    cart?: UserCart
   }
 }
