@@ -15,8 +15,12 @@ declare module Collections {
     slug?: string
   }
 
+  type UserCart = { slug: string }[]
+  type UserRole = "admin" | "standard" | "member"
   export interface User {
     username: string
     password: string
+    cart: UserCart
+    role: UserRole
   }
 }

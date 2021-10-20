@@ -63,22 +63,39 @@ const NavItem: React.FC = () => {
   const { navbarOpen } = useNavbarContext()
 
   useEffect(() => {
-    setStatus(handleStatus())
+    setStatus(handleStatus().status)
   }, [authStatus])
 
-  async function handleSign() {
-    authStatus === "authenticated" ? signOut() : signIn()
-  }
+  async function handleLink() {}
 
   function handleStatus() {
+    let obj: { status: string; href: string }
+
     switch (authStatus) {
       case "loading":
-        return "....."
+        obj = {
+          status: ".....",
+          href: "/",
+        }
+        break
       case "unauthenticated":
-        return "Sign In"
+        obj = {
+          status: "Login",
+          href: "/auth/signin",
+        }
+
+        break
       case "authenticated":
-        return "Sign Out"
+        obj = {
+          status: "Profile",
+          href: "/profile",
+        }
+        break
     }
+
+    if (path === "/auth/signin") obj = { status: "Sign Up", href: "/signup" }
+
+    return obj
   }
 
   return (
@@ -102,14 +119,13 @@ const NavItem: React.FC = () => {
           Address
         </div>
       </div>
-      <div className="p-0.5 bg-gradient-to-r from-gold-light to-gold rounded-lg hidden md:block">
-        <button
-          className="text-gold-light px-5 py-2 rounded-md bg-black transition-all duration-500 ease-in-out hover:text-black hover:bg-gradient-to-r hover:from-gold-light to-gold"
-          onClick={handleSign}
-        >
-          {status}
-        </button>
-      </div>
+      <Link href={handleStatus().href}>
+        <div className="p-0.5 bg-gradient-to-r from-gold-light to-gold rounded-lg hidden md:block">
+          <button className="text-gold-light px-5 py-2 rounded-md bg-black transition-all duration-500 ease-in-out hover:text-black hover:bg-gradient-to-r hover:from-gold-light to-gold">
+            <a>{status}</a>
+          </button>
+        </div>
+      </Link>
     </div>
   )
 }
@@ -119,11 +135,13 @@ interface NavlinkProps {
   title: string
 }
 
-const Navlink: React.FC<NavlinkProps> = ({ children, className, title }) => {
+const Navlink: React.FC<NavlinkProps> = ({ className, title }) => {
   return (
     <Link href={`/${title.toLowerCase()}`}>
       <a
-        className={`text-3xl text-black cursor-pointer p-2 md:text-base md:font-bold md:text-white md:border-opacity-0 md:hover:border-opacity-100 ${className}`}
+        className={`text-3xl text-black cursor-pointer p-2 transition-all ease-out duration-150 ${
+          title.toLocaleLowerCase() === "home" ? "md:hidden" : ""
+        } md:tracking-wide md:text-base md:font-light md:text-white md:border-opacity-0 md:border-white md:border-b-[1px] md:hover:border-opacity-100 ${className}`}
       >
         {title}
       </a>
