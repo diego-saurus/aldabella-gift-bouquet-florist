@@ -1,6 +1,5 @@
-import { useUsersCollection } from "hooks/useUsersCollection"
+import { useUsersCollection } from "hooks/useCollection"
 import { NextApiRequest, NextApiResponse } from "next"
-import { Collections } from "types/declaration"
 import { handleError } from "utils/handleError"
 import { hash } from "bcryptjs"
 import { handleBodyProp } from "utils/handleBodyProp"
@@ -36,9 +35,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await users.insertOne({
           username,
           password: hashedPassword,
+          role: "standard",
         })
 
-        res.status(201).json({ inserted: true, user: { username } })
+        res.status(201).json({ user: { username } })
 
         break
 

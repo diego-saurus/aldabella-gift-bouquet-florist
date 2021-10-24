@@ -1,19 +1,30 @@
+import Layout from "components/Layout"
 import { GetServerSideProps, NextPage } from "next"
-import { Session } from "next-auth"
 import { getSession, signOut } from "next-auth/react"
-import { useEffect } from "react"
 
-const Profile: NextPage = () => {
-  useEffect(() => {
-    getSession().then((res) => console.log(res))
-  }, [])
+interface Props {
+  user: {
+    name: string
+    email?: string
+    image?: string
+  }
+}
+
+const Profile: NextPage<Props> = ({ user }) => {
+  // useEffect(() => {
+  //   getSession().then((res) => console.log(res))
+  // }, [])
+  const handleButtonClick = async () => {
+    signOut()
+  }
   return (
-    <div className="text-white">
-      <h1>Profile Page</h1>
-      <button className="cursor-pointer" onClick={() => signOut()}>
-        Logout
-      </button>
-    </div>
+    <Layout title={`${user.name} Profile Page`}>
+      <div className="text-white">
+        <h1>Profile Page</h1>
+        <p>username : {user.name}</p>
+        <button onClick={handleButtonClick}>Sign Out</button>
+      </div>
+    </Layout>
   )
 }
 
@@ -29,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
 
   return {
-    props: {},
+    props: { user: session.user },
   }
 }
 

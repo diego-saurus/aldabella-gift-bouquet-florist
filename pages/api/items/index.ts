@@ -2,9 +2,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { Filter, FindOptions, Sort } from "mongodb"
 
-import { useItemsCollection } from "hooks/useItemsCollection"
+import { useItemsCollection } from "hooks/useCollection"
 import { generateSlug } from "utils/generateSlug"
-import { Collections } from "types/declaration"
 import { handleError } from "utils/handleError"
 import { checkSession } from "utils/checkSession"
 import { handleBodyProp } from "utils/handleBodyProp"

@@ -46,11 +46,14 @@ export function handleError(res: NextApiResponse, error: Error) {
 
     case 11000:
       status = 500
+      message = "server is error"
       break
   }
 
   res.status(status).json({
-    message: error.message || message,
-    ...error,
+    error: {
+      message: error.message || message,
+      ...error,
+    },
   })
 }

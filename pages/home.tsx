@@ -5,6 +5,7 @@ import Layout from "components/Layout"
 import GradientButton from "components/GradientBtn"
 
 import Vector from "svg/Vector 1.svg"
+import { useMediaQuery } from "hooks/useMediaQuery"
 
 const SVGStyle: CSSProperties = { zIndex: -10 }
 

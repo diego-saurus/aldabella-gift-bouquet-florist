@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { signIn, signOut, useSession, getCsrfToken } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 
 import { useNavbarContext } from "hooks/useNavbarContext"
 
 import MenuIcon from "svg/menu_black_24dp.svg"
 import MenuOpenIcon from "svg/menu_open_black_24dp.svg"
 import CartIcon from "svg/shopping_cart_black_24dp.svg"
+import ProfileIcon from "svg/profile_icon.svg"
+import { useMediaQuery } from "hooks/useMediaQuery"
 
 const NavItemsText = ["Home", "About", "Testimonial", "Gallery"]
 
@@ -29,6 +31,8 @@ const Navbar: React.FC = () => {
 
 const NavLogo: React.FC = () => {
   const { navbarOpen, toggleNavbar } = useNavbarContext()
+  const { pathname: path } = useRouter()
+  const isMedia = useMediaQuery("md")
 
   const IconClass = `fill-current ${navbarOpen ? "text-black" : "text-gold"}`
   return (
@@ -49,24 +53,31 @@ const NavLogo: React.FC = () => {
           <MenuIcon className={IconClass} />
         )}
       </button>
-      <button className={`md:hidden ${IconClass}`}>
-        <CartIcon />
+      <button className="md:hidden">
+        <Link href={path === "/profile" ? "/profile/cart" : "/profile"}>
+          <a>
+            {path === "/profile" ? (
+              <CartIcon className={IconClass} />
+            ) : (
+              <ProfileIcon className={`h-7 ${IconClass}`} />
+            )}
+          </a>
+        </Link>
       </button>
     </div>
   )
 }
 
 const NavItem: React.FC = () => {
-  const { data: session, status: authStatus } = useSession()
+  const { status: authStatus } = useSession()
   const [status, setStatus] = useState("")
   const { pathname: path } = useRouter()
   const { navbarOpen } = useNavbarContext()
+  const isMedia = useMediaQuery("md")
 
   useEffect(() => {
     setStatus(handleStatus().status)
   }, [authStatus])
-
-  async function handleLink() {}
 
   function handleStatus() {
     let obj: { status: string; href: string }
@@ -86,16 +97,30 @@ const NavItem: React.FC = () => {
 
         break
       case "authenticated":
+        if (path === "/profile") {
+          obj = {
+            status: "Sign Out",
+            href: "/profile",
+          }
+          break
+        }
+
         obj = {
           status: "Profile",
           href: "/profile",
         }
+
         break
     }
 
-    if (path === "/auth/signin") obj = { status: "Sign Up", href: "/signup" }
+    if (path === "/auth/signin")
+      obj = { status: "Sign Up", href: "/auth/signup" }
 
     return obj
+  }
+
+  const handleClick = () => {
+    if (path === "/profile") signOut()
   }
 
   return (
@@ -119,13 +144,15 @@ const NavItem: React.FC = () => {
           Address
         </div>
       </div>
-      <Link href={handleStatus().href}>
-        <div className="p-0.5 bg-gradient-to-r from-gold-light to-gold rounded-lg hidden md:block">
-          <button className="text-gold-light px-5 py-2 rounded-md bg-black transition-all duration-500 ease-in-out hover:text-black hover:bg-gradient-to-r hover:from-gold-light to-gold">
-            <a>{status}</a>
-          </button>
-        </div>
-      </Link>
+      {isMedia && (
+        <Link href={handleStatus().href}>
+          <div className="p-0.5 hidden md:block bg-gradient-to-r from-gold-light to-gold rounded-lg">
+            <button className="text-gold-light px-5 py-2 rounded-md bg-black transition-all duration-500 ease-in-out hover:text-black hover:bg-gradient-to-r hover:from-gold-light to-gold">
+              <a onClick={handleClick}>{status}</a>
+            </button>
+          </div>
+        </Link>
+      )}
     </div>
   )
 }

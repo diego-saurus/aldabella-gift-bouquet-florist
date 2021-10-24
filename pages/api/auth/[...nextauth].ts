@@ -1,26 +1,24 @@
-import NextAuth, { Awaitable } from "next-auth"
-import GithubProvider from "next-auth/providers/github"
+import NextAuth from "next-auth"
+import FacebookProvider from "next-auth/providers/facebook"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialProvider from "next-auth/providers/credentials"
 import TwitterProvider from "next-auth/providers/twitter"
-import { useUsersCollection } from "hooks/useUsersCollection"
+import { useUsersCollection } from "hooks/useCollection"
 import { compare } from "bcryptjs"
-import { Collections } from "types/declaration"
-import { JWT } from "next-auth/jwt"
 
 export default NextAuth({
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_ID,
+      clientSecret: process.env.FACEBOOK_SECRET,
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
     }),
     TwitterProvider({
-      clientId: "",
-      clientSecret: "",
+      clientId: process.env.TWITTER_ID,
+      clientSecret: process.env.TWITTER_SECRET,
     }),
     CredentialProvider({
       name: "Credential",
@@ -62,9 +60,8 @@ export default NextAuth({
       return session
     },
   },
-  secret: "test",
+  secret: "R3dH0tchill1",
   jwt: {
-    secret: "test",
     encryption: true,
   },
 })

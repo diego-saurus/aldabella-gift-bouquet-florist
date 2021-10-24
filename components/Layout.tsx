@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Navbar from "./Navbar"
 import Head from "next/head"
-import useScreenSize from "hooks/useScreenSize"
+import { useMediaQuery } from "hooks/useMediaQuery"
 
 interface Props {
   title: string
@@ -14,17 +14,15 @@ export const NavbarContext = React.createContext({
 
 const Layout: React.FC<Props> = ({ children, title }) => {
   const [navbarOpen, setNavbarOpen] = useState(false)
-  const [ScreenW] = useScreenSize()
+  const isMedia = useMediaQuery("md")
 
   const toggleNavbar = () => {
     setNavbarOpen((e) => !e)
   }
 
   useEffect(() => {
-    if (ScreenW > 768) {
-      setNavbarOpen(false)
-    }
-  }, [ScreenW])
+    setNavbarOpen(false)
+  }, [isMedia])
 
   useEffect(() => {
     const body = document.querySelector("body")

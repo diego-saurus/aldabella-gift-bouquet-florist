@@ -6,7 +6,7 @@ export default function useScreenSize(): number[] {
     const windowListener = (): void => {
       setSize([window.innerWidth, window.innerHeight])
     }
-
+    windowListener()
     window.addEventListener("resize", windowListener)
     return () => {
       window.removeEventListener("resize", windowListener)
