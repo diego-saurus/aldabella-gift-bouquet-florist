@@ -44,6 +44,11 @@ code {
   @apply mx-3 md:mx-24;
 }
 
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
